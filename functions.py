@@ -18,12 +18,24 @@ def get_data(symbol, interval, past, client=client):
 
 # Function to define the support levels
 def support(frame, l, n1, n2):
-    for i in range(1-n1+1, 1+1):
+    for i in range(l-n1+1, l+1):
         if(frame.low[i]>frame.low[i-1]):
             return 0 
         
-    for i in range(1+1, 1+n2+1):
+    for i in range(l+1, l+n2+1):
         if(frame.low[i]<frame.low[i-1]):
             return 0 
+        
+    return 1
+
+# Function to define the resistence levels
+def resistence(frame, l, n1, n2):
+    for i in range(l-n1+1, l+1):
+        if(frame.high[i]<frame.high[i-1]):
+            return 0
+        
+    for i in range(l+1, l+n2+1):
+        if(frame.high[i]>frame.high[i-1]):
+            return 0
         
     return 1
