@@ -1,8 +1,10 @@
 import config, pandas as pd, plotly.graph_objects as go
 from binance.client import Client
 
+# Connect to the client via api key and secret
 client = Client(config.API_KEY, config.API_SECRET)
 
+# Function to get historical data from a symbol
 def get_data(symbol, interval, past, client=client):
     frame = pd.DataFrame(client.get_historical_klines(symbol,
                                                       interval,
@@ -14,3 +16,14 @@ def get_data(symbol, interval, past, client=client):
 
     return frame
 
+# Function to define the support levels
+def support(frame, l, n1, n2):
+    for i in range(1-n1+1, 1+1):
+        if(frame.low[i]>frame.low[i-1]):
+            return 0 
+        
+    for i in range(1+1, 1+n2+1):
+        if(frame.low[i]<frame.low[i-1]):
+            return 0 
+        
+    return 1
