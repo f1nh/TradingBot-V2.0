@@ -53,7 +53,25 @@ for row in range(3, 205):
     if resistence(frame, row, n1, n2):
         sr.append((row, frame['High'][row], 2))
 
-print(sr)
+# merging the levels
+plotlist1 = [x[1] for x in sr if x[2]==1]
+plotlist2 = [x[1] for x in sr if x[2]==2]
+plotlist1.sort()
+plotlist2.sort()
+
+for i in range(1, len(plotlist1)):
+    if(i>=len(plotlist1)):
+        break
+
+    if abs(plotlist1[i]-plotlist1[i-1])<=1.005:
+        plotlist1.pop(i)
+
+for i in range(1, len(plotlist2)):
+    if(i>=len(plotlist2)):
+        break
+
+    if abs(plotlist2[i]-plotlist2[i-1])<=1.005:
+        plotlist2.pop(i)
 
 s = 0
 e = 200
@@ -66,14 +84,28 @@ fig = go.Figure(data=[go.Candlestick(x=dfpl.index,
                                      close=dfpl['Close'])])
 c = 0
 while(1):
-    if(c>len(sr)-1):
+    if(c>len(plotlist1)-1):
         break
     
     fig.add_shape(type='line',
                   x0=s,
-                  y0=sr[c][1],
+                  y0=plotlist1[c],
                   x1=e,
-                  y1=sr[c][1])
+                  y1=plotlist1[c],
+                  line=dict(color='darkred', width=1))
     c+=1
+
+c=0
+while(1):
+    if(c>len(plotlist2)-1):
+        break
     
+    fig.add_shape(type='line',
+                  x0=s,
+                  y0=plotlist2[c],
+                  x1=e,
+                  y1=plotlist2[c],
+                  line=dict(color='darkgreen', width=1))
+    c+=1
+
 fig.show()
