@@ -16,6 +16,8 @@ def get_data(symbol, interval, past, client=client):
 
     return frame
 
+frame = get_data(symbol='BTCUSDT', interval='15m', past='1 week ago UTC')
+
 # Function to define the support levels
 def support(frame, l, n1, n2): # n1 n2 means how many candles before and after candle l
     for i in range(l-n1+1, l+1):
@@ -40,8 +42,36 @@ def resistence(frame, l, n1, n2): # n1 n2 means how many candles before and afte
         
     return 1
 
+# Functions to identify the Engulfing candle patterns
+
+def Revsignal1(frame):
+    length = len(frame)
+    high = list(frame['High'])
+    low = list(frame['Low'])
+    close = list(frame['Close'])
+    open = list(frame['Open'])
+    signal = [0] * length
+    bodyframe = [0] * length
+
+    for row in range(1, length):
+        bodyframe[row] = abs(open[row]-close[row])
+        bodyframemin = 0.003
+        if (bodyframe[row]>bodyframemin and bodyframe[row-1]>bodyframemin and
+            open[row-1]<close[row-1] and
+            open[row]>close[row] and
+            (open[row]-close[row-1])>=+0e-5 and close[row]<open[row-1]):
+            signal[row] = 1
+        elif (bodyframe[row]>bodyframemin and bodyframe[row-1]>bodyframemin and
+              open[row-1]>close[row-1] and
+              open[row]<close[row] and
+              (open[row]-close[row-1])<=-0e-5 and close[row]>open[row-1]):
+            signal[row] = 2
+        else:
+            signal[row] = 0
+
+    return signal
+
 # Plotting the support resistence levels on the chart
-frame = get_data(symbol='BTCUSDT', interval='15m', past='1 week ago UTC')
 
 sr = []
 n1 = 3
