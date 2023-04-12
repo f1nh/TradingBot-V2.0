@@ -1,3 +1,3 @@
-# Trading_Bot
+# TradingBot-V2.0
 
-Trading Bot is a Python script that applies the technical analysis strategies on the market to predict the price and make trades using the neural networks
+This is a enchanced version from the original TradingBot the difference here is that the new stratigie uses the neural networks to predict the price moving and get more accurate results
